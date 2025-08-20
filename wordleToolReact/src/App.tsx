@@ -1,6 +1,19 @@
 import { useState } from "react";
 import { Row, Form, Button } from "react-bootstrap";
 
+const handleKnownUpdate = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  index: number
+) => {
+  if (e.target.value.length > 0) {
+    const form = e.target.form;
+    if (!form) return;
+
+    const next = form.elements[index + 1] as HTMLElement | undefined;
+    next?.focus();
+  }
+};
+
 function App() {
   const [known, setKnown] = useState(["_", "_", "_", "_", "_"]);
   const [nonmatching, setNonMatching] = useState(["", "", "", "", ""]);
@@ -15,7 +28,7 @@ function App() {
       nonmatching: nonmatching.join(","),
       eliminated: eliminated,
     });
-    setLoading(true)
+    setLoading(true);
     try {
       const response = await fetch(
         `http://localhost:8000/filter_words?${filterQuery.toString()}`,
@@ -28,12 +41,12 @@ function App() {
       }
       const data = await response.json();
       setPossibleGuesses(data.words);
-      setLoading(false)
-      setError(null)
-      console.log("words received: " + data.words)
+      setLoading(false);
+      setError(null);
+      console.log("words received: " + data.words);
     } catch (err) {
       setPossibleGuesses([]);
-      setLoading(false)
+      setLoading(false);
       setError(err instanceof Error ? err.message : String(err));
     }
   };
@@ -60,10 +73,14 @@ function App() {
               maxLength={1}
               style={{ width: "1.5em", textAlign: "center" }}
               value={letter === "_" ? "" : letter}
-              onChange={changed => {
+              onChange={(changed) => {
                 const newLetters = [...known];
                 newLetters[index] = changed.target.value || "_";
                 setKnown(newLetters);
+                handleKnownUpdate(
+                  changed as React.ChangeEvent<HTMLInputElement>,
+                  index
+                );
               }}
             />
           ))}
@@ -81,7 +98,7 @@ function App() {
               maxLength={6}
               style={{ width: "5em", textAlign: "center" }}
               value={group}
-              onChange={changed => {
+              onChange={(changed) => {
                 const newLetters = [...nonmatching];
                 newLetters[index] = changed.target.value;
                 setNonMatching(newLetters);
@@ -97,7 +114,7 @@ function App() {
             type="text"
             maxLength={26}
             value={eliminated}
-            onChange={changed => {
+            onChange={(changed) => {
               setEliminated(changed.target.value);
             }}
           />
