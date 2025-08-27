@@ -2,6 +2,31 @@
 '''
 
 
+def best_first_guesses(words: list[str]) -> list[str]:
+    ''' Searches word list for words that could be considered 'good' first guesses.
+    '''
+    vowels: list[str] = ['a', 'e', 'i', 'o', 'u']
+    best_guesses: list[str] = []
+
+    for word in words:
+        unique_vowels: list[str] = []
+        unique_consonants: list[str] = []
+
+        i = 0
+        while i < len(word):
+            letter = word[i]
+            if letter in vowels and letter not in unique_vowels:
+                unique_vowels.append(letter)
+            elif letter not in unique_consonants:
+                unique_consonants.append(letter)
+            i += 1
+
+        if len(unique_vowels) + len(unique_consonants) >= 4 and len(unique_vowels) >= 3:
+            best_guesses.append(word)
+
+    return best_guesses
+
+
 def possible_words(known_letters: list[str],
                    unknown_letters: list[list[str]],
                    eliminated: list[str],
@@ -14,7 +39,7 @@ def possible_words(known_letters: list[str],
         i = 0
         while i < len(word) and is_possible:
             letter = word[i]
-            # check if the letter and location mathch the known letters' positioning.
+            # check if the letter and location match the known letters' positioning.
             if known_letters[i] != '_' and known_letters[i] != letter:
                 is_possible = False
             # check to see if the letter is in a position that we know is not correct.
@@ -50,12 +75,17 @@ def main():
     ''' This file can run as main() for testing purposes, but recommend to use as a module.
     '''
     words: list[str] = load_words("valid-wordle-words.txt")
+    '''
     print(possible_words(
         known_letters=['a', '_', '_', '_', 'o'],
         unknown_letters=[[], [], ['e'], ['i', 'm'], []],
         available_letters=['q', 'w', 'e', 'r', 'y', 'u', 'i', 'o', 'f', 'h', 'j', 'k', 'z', 'x', 'c', 'v', 'b', 'n', 'm'],
         words=words
     ))
+    '''
+    bfgs = best_first_guesses(words)
+    print(f"These {len(bfgs)} words could be considered decent guesses")
+    print(bfgs)
 
 
 if __name__ == "__main__":

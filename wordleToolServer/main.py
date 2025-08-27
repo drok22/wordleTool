@@ -1,4 +1,3 @@
-# main.py
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from constants import REACT_APP_URL, WORDLE_WORDS_PATH
