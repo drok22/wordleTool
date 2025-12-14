@@ -2,7 +2,7 @@
 '''
 
 
-def best_first_guesses(words: list[str]) -> list[str]:
+def best_first_guesses(words: list[str], vowel_limit: int = 3) -> list[str]:
     ''' Searches word list for words that could be considered 'good' first guesses.
     '''
     vowels: list[str] = ['a', 'e', 'i', 'o', 'u']
@@ -20,8 +20,11 @@ def best_first_guesses(words: list[str]) -> list[str]:
             elif letter not in unique_consonants:
                 unique_consonants.append(letter)
             i += 1
-
+        '''
         if len(unique_vowels) + len(unique_consonants) >= 4 and len(unique_vowels) >= 3:
+            best_guesses.append(word)
+        '''
+        if len(unique_vowels) + len(unique_consonants) >= 4 and len(unique_vowels) >= vowel_limit:
             best_guesses.append(word)
 
     return best_guesses
@@ -83,7 +86,7 @@ def main():
         words=words
     ))
     '''
-    bfgs = best_first_guesses(words)
+    bfgs = best_first_guesses(words, vowel_limit=4)
     print(f"These {len(bfgs)} words could be considered decent guesses")
     print(bfgs)
 
