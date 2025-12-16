@@ -74,22 +74,17 @@ def load_words(file_path: str) -> list[str]:
     return words
 
 
-def main():
-    ''' This file can run as main() for testing purposes, but recommend to use as a module.
+def letter_count(word_list: list[str]) -> dict:
     '''
-    words: list[str] = load_words("valid-wordle-words.txt")
+    reads letter counts from word list
     '''
-    print(possible_words(
-        known_letters=['a', '_', '_', '_', 'o'],
-        unknown_letters=[[], [], ['e'], ['i', 'm'], []],
-        available_letters=['q', 'w', 'e', 'r', 'y', 'u', 'i', 'o', 'f', 'h', 'j', 'k', 'z', 'x', 'c', 'v', 'b', 'n', 'm'],
-        words=words
-    ))
-    '''
-    bfgs = best_first_guesses(words, vowel_limit=4)
-    print(f"These {len(bfgs)} words could be considered decent guesses")
-    print(bfgs)
+    counts: dict = {}
 
+    for word in word_list:
+        for letter in word:
+            if counts.get(letter, None):
+                counts[letter] += 1
+            else:
+                counts[letter] = 1
 
-if __name__ == "__main__":
-    main()
+    return counts
